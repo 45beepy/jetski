@@ -156,6 +156,13 @@ function getNextTheme(theme) {
     return THEME_ORDER[nextIndex];
 }
 
+function mapPrettyRouteToPage(url) {
+    const parsed = new URL(url, window.location.origin);
+    const path = parsed.pathname.replace(/\/$/, '') || '/';
+    if (path === '/') return 'index.html';
+    return path.endsWith('.html') ? path.slice(1) : `${path.slice(1)}.html`;
+}
+
 function setTheme(theme, { persist = false } = {}) {
     const root = document.documentElement;
     const definition = THEME_DEFINITIONS[theme] || THEME_DEFINITIONS.day;
@@ -207,13 +214,14 @@ function hideThemeToggle() {
 }
 
 function attachProfileImageEasterEgg() {
-    const profileImage = document.querySelector('.bio-image');
-    if (!profileImage) return;
+    const titleElement = document.querySelector('.header-top h1');
+    const triggerElement = titleElement || document.querySelector('.bio-image');
+    if (!triggerElement) return;
 
     let clickCount = 0;
     let toggleVisible = false;
 
-    profileImage.addEventListener('click', () => {
+    triggerElement.addEventListener('click', () => {
         clickCount += 1;
 
         if (clickCount >= PROFILE_IMAGE_CLICKS_REQUIRED) {
@@ -255,9 +263,7 @@ function highlightCurrentNav() {
     const navItems = document.querySelectorAll('.nav-item');
     if (!navItems || navItems.length === 0) return;
 
-    const pathName = window.location.pathname || '';
-    const currentFile = pathName.split('/').pop() || 'index.html';
-    const currentHrefFull = window.location.href;
+    const currentPath = (window.location.pathname || '/').replace(/\/$/, '') || '/';
 
     navItems.forEach(navItem => {
         const link = navItem.querySelector('a');
@@ -265,8 +271,8 @@ function highlightCurrentNav() {
         if (!link) return;
 
         const href = link.getAttribute('href') || '';
-        const hrefFile = href.split('/').pop() || '';
-        const isActive = hrefFile === currentFile || currentHrefFull.endsWith(href) || (href === 'index.html' && (currentFile === '' || currentFile === 'index.html'));
+        const hrefPath = new URL(href, window.location.origin).pathname.replace(/\/$/, '') || '/';
+        const isActive = currentPath === hrefPath;
 
         if (isActive) {
             navItem.classList.add('active');
@@ -284,18 +290,20 @@ function setupClientRouting() {
         anchor.addEventListener('click', event => {
             const href = anchor.getAttribute('href');
             if (!href || href.startsWith('http') || href.startsWith('#')) return;
-            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-            if (href === currentPage) {
-                event.preventDefault();
+            const url = new URL(href, window.location.origin);
+            if (url.origin !== window.location.origin) return;
+
+            event.preventDefault();
+            const prettyPath = url.pathname.replace(/\/$/, '') || '/';
+            if (prettyPath === window.location.pathname.replace(/\/$/, '') || (prettyPath === '/' && window.location.pathname === '/')) {
                 return;
             }
-            event.preventDefault();
-            loadPageContent(href, true);
+            loadPageContent(prettyPath, true);
         });
     });
 
     window.addEventListener('popstate', event => {
-        const url = event.state?.url || window.location.pathname.split('/').pop() || 'index.html';
+        const url = event.state?.url || window.location.pathname;
         loadPageContent(url, false);
     });
 }
@@ -307,7 +315,8 @@ function loadPageContent(url, pushState = true) {
         return;
     }
 
-    fetch(url, { cache: 'no-cache' })
+    const pageFile = mapPrettyRouteToPage(url);
+    fetch(pageFile, { cache: 'no-cache' })
         .then(response => {
             if (!response.ok) throw new Error('Failed to fetch page');
             return response.text();
