@@ -301,6 +301,12 @@ function setupClientRouting() {
 }
 
 function loadPageContent(url, pushState = true) {
+    const currentPageContent = document.getElementById('page-content');
+    if (!currentPageContent) {
+        window.location.href = url;
+        return;
+    }
+
     fetch(url, { cache: 'no-cache' })
         .then(response => {
             if (!response.ok) throw new Error('Failed to fetch page');
@@ -310,29 +316,33 @@ function loadPageContent(url, pushState = true) {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
             const newPageContent = doc.getElementById('page-content');
-            const currentPageContent = document.getElementById('page-content');
-            if (!newPageContent || !currentPageContent) {
+            if (!newPageContent) {
                 window.location.href = url;
                 return;
             }
 
-            currentPageContent.innerHTML = newPageContent.innerHTML;
-            document.title = doc.title || document.title;
+            currentPageContent.classList.add('fade-out');
+            currentPageContent.addEventListener('transitionend', function handleTransition() {
+                currentPageContent.removeEventListener('transitionend', handleTransition);
+                currentPageContent.innerHTML = newPageContent.innerHTML;
+                document.title = doc.title || document.title;
 
-            highlightCurrentNav();
-            if (pushState) {
-                history.pushState({ url }, doc.title, url);
-            }
+                highlightCurrentNav();
+                if (pushState) {
+                    history.pushState({ url }, doc.title, url);
+                }
 
-            if (document.getElementById('blog-container')) {
-                loadBlogPosts();
-            }
+                if (document.getElementById('blog-container')) {
+                    loadBlogPosts();
+                }
 
-            if (document.getElementById('books-grid')) {
-                loadReadingList();
-            }
+                if (document.getElementById('books-grid')) {
+                    loadReadingList();
+                }
 
-            attachProfileImageEasterEgg();
+                attachProfileImageEasterEgg();
+                requestAnimationFrame(() => currentPageContent.classList.remove('fade-out'));
+            }, { once: true });
         })
         .catch(() => {
             window.location.href = url;
@@ -479,7 +489,8 @@ async function loadReadingList() {
 
     try {
         // Use rss2json to bypass CORS and parse the XML into a clean JSON response
-        const feedUrl = `https://www.goodreads.com/review/list_rss/${CONFIG.goodreads.userId}?shelf=currently-reading`;
+        const timestamp = Date.now();
+        const feedUrl = `https://www.goodreads.com/review/list_rss/${CONFIG.goodreads.userId}?shelf=currently-reading&_=${timestamp}`;
         const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`;
 
         const response = await fetch(apiUrl, { cache: 'no-cache' });
