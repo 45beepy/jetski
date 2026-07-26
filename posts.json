@@ -1,12 +1,14 @@
 [
     {
         "id": 1,
-        "date": "2024-07-26T10:00:00Z",
-        "content": "# Setting up my new digital garden\n\nToday I built this super lightweight portfolio! It's just HTML, CSS, and JS. I wanted something visually rich but without the overhead of heavy frameworks. \n\nI managed to add:\n- A neat Last.fm integration for what I'm listening to.\n- A books section.\n- And this markdown-powered blog!\n\nFeeling really good about how fast this loads."
+        "slug": "setting-up-my-new-digital-garden",
+        "file": "posts/setting-up-my-new-digital-garden.md",
+        "date": "2024-07-26T10:00:00Z"
     },
     {
         "id": 2,
-        "date": "2024-07-25T14:30:00Z",
-        "content": "# Deep work sessions\n\nBeen reading *The Pragmatic Programmer* a lot lately. One of the best takeaways is treating your code like a garden—constantly weeding and nurturing it. I spent a few hours refactoring old projects and it felt incredibly rewarding."
+        "slug": "deep-work-sessions",
+        "file": "posts/deep-work-sessions.md",
+        "date": "2024-07-25T14:30:00Z"
     }
 ]

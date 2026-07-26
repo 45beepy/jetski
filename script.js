@@ -290,8 +290,9 @@ function setupClientRouting() {
         anchor.addEventListener('click', event => {
             const href = anchor.getAttribute('href');
             if (!href || href.startsWith('http') || href.startsWith('#')) return;
-            const url = new URL(href, window.location.origin);
-            if (url.origin !== window.location.origin) return;
+            const url = new URL(href, window.location.href);
+            const isCrossOrigin = window.location.protocol !== 'file:' && url.origin !== window.location.origin;
+            if (isCrossOrigin) return;
 
             event.preventDefault();
             const prettyPath = url.pathname.replace(/\/$/, '') || '/';
@@ -465,7 +466,14 @@ async function loadBlogPosts() {
 
         blogContainer.innerHTML = ''; 
 
-        posts.forEach(post => {
+        for (const post of posts) {
+            const postResponse = await fetch(post.file, { cache: 'no-cache' });
+            if (!postResponse.ok) {
+                console.warn(`Unable to load post file: ${post.file}`);
+                continue;
+            }
+
+            const markdown = await postResponse.text();
             const article = document.createElement('article');
             article.className = 'blog-post';
             
@@ -477,12 +485,12 @@ async function loadBlogPosts() {
 
             const contentDiv = document.createElement('div');
             contentDiv.className = 'blog-post-content';
-            contentDiv.innerHTML = marked.parse(post.content);
+            contentDiv.innerHTML = marked.parse(markdown);
 
             article.appendChild(dateSpan);
             article.appendChild(contentDiv);
             blogContainer.appendChild(article);
-        });
+        }
 
     } catch (error) {
         console.error('Error loading blog posts:', error);
