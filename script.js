@@ -317,7 +317,7 @@ function loadPageContent(url, pushState = true) {
     }
 
     const pageFile = mapPrettyRouteToPage(url);
-    fetch(pageFile, { cache: 'no-cache' })
+    fetch(pageFile)
         .then(response => {
             if (!response.ok) throw new Error('Failed to fetch page');
             return response.text();
@@ -494,7 +494,7 @@ async function loadBlogPosts() {
         blogContainer.innerHTML = ''; 
 
         for (const post of posts) {
-            const postResponse = await fetch(post.file, { cache: 'no-cache' });
+            const postResponse = await fetch(post.file);
             if (!postResponse.ok) {
                 console.warn(`Unable to load post file: ${post.file}`);
                 continue;
