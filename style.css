@@ -17,7 +17,7 @@
     --hover-blue-800: #1e40af;
 
     /* Theme-specific */
-    --sky-image: url('assets/sky-day.png');
+    --sky-image: url('assets/sky-day.webp');
     --sky-fallback: #bae6fd;
     --header-color: #1d4ed8;
     --card-bg: rgba(255, 255, 255, 0.75);
@@ -39,7 +39,7 @@
 }
 
 [data-theme="night"] {
-    --sky-image: url('assets/sky-night.png');
+    --sky-image: url('assets/sky-night.webp');
     --sky-fallback: #0f172a;
 
     /* Text Colors */

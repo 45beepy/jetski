@@ -17,7 +17,7 @@ const THEME_ORDER = ['sunrise', 'day', 'sunset', 'night'];
 
 const THEME_DEFINITIONS = {
     sunrise: {
-        backgroundImage: 'url("assets/sunrise.jfif"), url("assets/sky-day.png")',
+        backgroundImage: 'url("assets/sunrise.webp"), url("assets/sky-day.webp")',
         fallbackColor: '#bae6fd',
         colors: {
             textBlue: '#1d4ed8',
@@ -46,7 +46,7 @@ const THEME_DEFINITIONS = {
         }
     },
     day: {
-        backgroundImage: 'url("assets/sky-day.png")',
+        backgroundImage: 'url("assets/sky-day.webp")',
         fallbackColor: '#bae6fd',
         colors: {
             textBlue: '#1d4ed8',
@@ -75,7 +75,7 @@ const THEME_DEFINITIONS = {
         }
     },
     sunset: {
-        backgroundImage: 'url("assets/sky-sunset.png")',
+        backgroundImage: 'url("assets/sky-sunset.webp")',
         fallbackColor: '#0f172a',
         colors: {
             textBlue: '#f8fafc',
@@ -102,7 +102,7 @@ const THEME_DEFINITIONS = {
         }
     },
     night: {
-        backgroundImage: 'url("assets/sky-night.png")',
+        backgroundImage: 'url("assets/sky-night.webp")',
         fallbackColor: '#0f172a',
         colors: {
             textBlue: '#60a5fa',
