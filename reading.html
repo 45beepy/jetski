@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading List - Pravin's Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="layout-wrapper">
+        <div class="layout-container">
+            <!-- Header Section -->
+            <header class="header">
+                <div class="header-top">
+                    <h1>Pravin's Portfolio</h1>
+                    <button id="theme-toggle" class="theme-switcher" type="button" aria-label="Toggle day/night theme">
+                        <span class="theme-icon">☀️</span>
+                        <span class="theme-label">Day mode</span>
+                    </button>
+                    <div class="mobile-menu-btn">
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><g><path d="M20.437,19.937c0.276,0 0.5,0.224 0.5,0.5c0,0.276 -0.224,0.5 -0.5,0.5l-16.874,0.002c-0.276,-0 -0.5,-0.224 -0.5,-0.5c-0,-0.276 0.224,-0.5 0.5,-0.5l16.874,-0.002Z"></path><path d="M20.437,11.5c0.276,-0 0.5,0.224 0.5,0.5c0,0.276 -0.224,0.5 -0.5,0.5l-10,0.001c-0.276,-0 -0.5,-0.224 -0.5,-0.5c-0,-0.276 0.224,-0.5 0.5,-0.5l10,-0.001Z"></path><path d="M20.437,3.062c0.276,-0 0.5,0.224 0.5,0.5c0,0.276 -0.224,0.5 -0.5,0.5l-16.874,0.001c-0.276,-0 -0.5,-0.224 -0.5,-0.5c-0,-0.276 0.224,-0.5 0.5,-0.5l16.874,-0.001Z"></path></g></svg>
+                    </div>
+                </div>
+                
+                <nav class="nav-links">
+                    <section class="nav-item nav-about"><a href="index.html"><button>about</button></a></section>
+                    <section class="nav-item nav-reading"><a href="reading.html"><button>reading list</button></a></section>
+                    <section class="nav-item nav-blog"><a href="blog.html"><button>blog</button></a></section>
+                    <section class="nav-item nav-socials"><a href="socials.html"><button>socials</button></a></section>
+                </nav>
+            </header>
+            <main id="page-content">
+            <!-- Reading List Section -->
+            <section id="reading" class="reading-section">
+                <div id="books-grid" class="books-grid">
+                    <!-- Goodreads currently reading books will be loaded here -->
+                </div>
+            </section>
+            </main>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
