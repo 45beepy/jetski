@@ -327,10 +327,13 @@ function loadPageContent(url, pushState = true) {
                 currentPageContent.innerHTML = newPageContent.innerHTML;
                 document.title = doc.title || document.title;
 
-                highlightCurrentNav();
+                // FIX: Push the new URL state FIRST
                 if (pushState) {
                     history.pushState({ url }, doc.title, url);
                 }
+
+                // NOW check the URL to highlight the navigation
+                highlightCurrentNav();
 
                 if (document.getElementById('blog-container')) {
                     loadBlogPosts();
