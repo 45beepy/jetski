@@ -365,13 +365,41 @@ function loadPageContent(url, pushState = true) {
 /**
  * Fetch and display Last.fm data
  */
-async function fetchLastFmData() {
+function renderLastFmUI(trackData) {
     const songTitleEl = document.getElementById('song-title');
     const songArtistEl = document.getElementById('song-artist');
     const songTitleExpEl = document.getElementById('song-title-expanded');
     const songAlbumEl = document.getElementById('song-album');
     const songArtEl = document.getElementById('song-art');
-    
+    const songArtistCollapsedEl = document.getElementById('song-artist-collapsed');
+
+    if (!songTitleEl || !songArtistEl) return;
+
+    const { title, artist, album, art, isPlaying } = trackData;
+    const titleContent = isPlaying
+        ? `<span class="live-indicator" title="Listening right now"></span>${title}`
+        : title;
+
+    songTitleEl.innerHTML = titleContent;
+    if (songTitleExpEl) songTitleExpEl.textContent = title;
+    songArtistEl.textContent = artist;
+    if (songArtistCollapsedEl) songArtistCollapsedEl.textContent = artist;
+    songAlbumEl.textContent = album || 'Unknown Album';
+    if (songArtEl) songArtEl.src = art || 'https://via.placeholder.com/64';
+}
+
+async function fetchLastFmData() {
+    const cachedTrack = localStorage.getItem('lastfm_cache');
+    if (cachedTrack) {
+        try {
+            renderLastFmUI(JSON.parse(cachedTrack));
+        } catch (ignored) {
+            // Ignore invalid cache
+        }
+    }
+
+    const songTitleEl = document.getElementById('song-title');
+    const songArtistEl = document.getElementById('song-artist');
     if (!songTitleEl || !songArtistEl) return;
 
     try {
@@ -388,23 +416,22 @@ async function fetchLastFmData() {
             const track = data.recenttracks.track[0];
             const songName = track.name;
             const artistName = track.artist['#text'];
+            const albumName = track.album && track.album['#text'] ? track.album['#text'] : 'Unknown Album';
+            const imageUrl = track.image && track.image.length > 2 && track.image[2]['#text']
+                ? track.image[2]['#text']
+                : 'https://via.placeholder.com/64';
+            const isPlaying = track['@attr'] && track['@attr'].nowplaying === 'true';
 
-            songTitleEl.textContent = songName;
-            if (songTitleExpEl) songTitleExpEl.textContent = songName;
-            if (songArtistEl) songArtistEl.textContent = artistName;
+            const trackData = {
+                title: songName,
+                artist: artistName,
+                album: albumName,
+                art: imageUrl,
+                isPlaying
+            };
 
-            const songArtistCollapsedEl = document.getElementById('song-artist-collapsed');
-            if (songArtistCollapsedEl) songArtistCollapsedEl.textContent = artistName;
-            
-            if (track.album && track.album['#text']) {
-                songAlbumEl.textContent = track.album['#text'];
-            } else {
-                songAlbumEl.textContent = 'Unknown Album';
-            }
-            
-            if (track.image && track.image.length > 2 && track.image[2]['#text']) {
-                songArtEl.src = track.image[2]['#text'];
-            }
+            localStorage.setItem('lastfm_cache', JSON.stringify(trackData));
+            renderLastFmUI(trackData);
         } else {
             simulateLastFmData();
         }
@@ -563,7 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const songTitleEl = document.getElementById('song-title');
     if (songTitleEl) {
         fetchLastFmData();
-        setInterval(fetchLastFmData, 3 * 60 * 1000);
+        setInterval(fetchLastFmData, 15 * 1000);
     }
 
     const blogContainer = document.getElementById('blog-container');
