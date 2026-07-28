@@ -664,6 +664,12 @@ h2 {
     color: var(--hover-orange-700);
 }
 
+.social-icon.letterboxd img {
+    display: block;
+    width: 1em;
+    height: 1em;
+}
+
 .social-icon.linkedin a {
     color: var(--text-blue-600);
 }
